@@ -43,7 +43,7 @@ export default function ProductList() {
               alt={product.name}
               className="w-32 h-32 object-cover rounded mr-4"
             />
-            <div>
+            <div className="ml-4">
               <h2 className="text-2xl font-semibold mb-2">{product.name}</h2>
               <p className="text-gray-700 mb-2">{product.description}</p>
               <p className="text-gray-900 font-bold mb-2">
