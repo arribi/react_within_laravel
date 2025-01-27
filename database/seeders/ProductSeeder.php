@@ -14,6 +14,7 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
+        Product::truncate(); //Reinicia el contador id a 0
         Product::factory(50)->create();
     }
 }
