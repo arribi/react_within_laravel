@@ -14,4 +14,10 @@ export default defineConfig({
         }),
         react(),
     ],
+    // server: {
+    //     cors: {
+    //         origin: ['http://localhost', 'http://127.0.0.1'],
+    //         credentials: true
+    //     }
+    // }
 });

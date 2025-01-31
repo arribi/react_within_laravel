@@ -1,32 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
   const [pagination, setPagination] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const history = useHistory();
-
-  // Función para verificar si el usuario está autenticado
-  const checkAuth = async () => {
-    try {
-      const response = await fetch("http://localhost/api/user", {
-        credentials: 'include',
-      });
-      if (!response.ok) {
-        throw new Error("Not authenticated");
-      }
-    } catch (error) {
-      history.push("/login"); // Redirigir a la página de login si no está autenticado
-    }
-  };
 
   // Función para obtener productos
   const fetchProducts = async (page = 1) => {
     try {
+
+      // await fetch("http://localhost/sanctum/csrf-cookie", {
+      //   credentials: "include",
+      // });
+
       const response = await fetch(`http://localhost/api/products?page=${page}`, {
-        credentials: 'include',
+        credentials: "include",
       });
+
+      if (response.redirected) {
+        window.location.href = response.url; // Redirigir manualmente si Laravel lo hace
+        return;
+      }
+
       const data = await response.json();
       setProducts(data.data); // Productos de la página actual
       setPagination(data.meta); // Información de la paginación
@@ -35,9 +30,8 @@ export default function ProductList() {
     }
   };
 
-  // Verificar autenticación y obtener productos cuando cambie la página actual
+  // Llamar a la API cuando cambie la página actual
   useEffect(() => {
-    checkAuth(); // Verificar autenticación
     fetchProducts(currentPage);
   }, [currentPage]);
 
