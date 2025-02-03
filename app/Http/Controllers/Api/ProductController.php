@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
 
 
@@ -51,8 +52,14 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        //
+        // Verificar permisos con políticas
+        if (auth()->user()->cannot('delete', $product)) {
+            return response()->json(['message' => 'No autorizado'], 403);
+        }
+        $product->delete();
+
+        return response()->json(['message' => 'Producto eliminado correctamente'], 200);
     }
 }

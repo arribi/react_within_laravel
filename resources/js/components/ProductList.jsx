@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from 'axios';
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
@@ -8,10 +9,6 @@ export default function ProductList() {
   // Función para obtener productos
   const fetchProducts = async (page = 1) => {
     try {
-
-      // await fetch("http://localhost/sanctum/csrf-cookie", {
-      //   credentials: "include",
-      // });
 
       const response = await fetch(`http://localhost/api/products?page=${page}`, {
         credentials: "include",
@@ -42,6 +39,32 @@ export default function ProductList() {
     }
   };
 
+  // Función para eliminar un producto
+  const deleteProduct = async (productId) => {
+
+    if (!window.confirm("¿Estás seguro de que quieres eliminar este producto?")) return;
+
+    try {
+      await axios.get("/sanctum/csrf-cookie"); // Obtener CSRF
+
+      await axios.delete(`/api/products/${productId}`, { withCredentials: true });
+
+      alert("Producto eliminado correctamente");
+      setProducts(products.filter(product => product.id !== productId));
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 403) {
+          alert("No tienes permiso para eliminar este producto.");
+        } else {
+          alert(`Error: ${error.response.status} - ${error.response.data.message}`);
+        }
+      } else {
+        alert("Error eliminando el producto.");
+      }
+    }
+  };
+
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">Product List</h1>
@@ -63,7 +86,11 @@ export default function ProductList() {
                 Price: ${product.price}
               </p>
               <p className="text-gray-700">Quantity: {product.quantity}</p>
+              <button onClick={() => deleteProduct(product.id)} className="bg-red-500 text-white px-3 py-1 rounded">
+                Delete
+              </button>
             </div>
+
           </li>
         ))}
       </ul>
