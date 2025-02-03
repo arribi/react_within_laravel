@@ -79,18 +79,21 @@ export default function ProductList() {
               alt={product.name}
               className="w-32 h-32 object-cover rounded mr-4"
             />
-            <div className="ml-4">
-              <h2 className="text-2xl font-semibold mb-2">{product.name}</h2>
-              <p className="text-gray-700 mb-2">{product.description}</p>
-              <p className="text-gray-900 font-bold mb-2">
-                Price: ${product.price}
-              </p>
-              <p className="text-gray-700">Quantity: {product.quantity}</p>
-              <button onClick={() => deleteProduct(product.id)} className="bg-red-500 text-white px-3 py-1 rounded">
-                Delete
-              </button>
+            <div className="ml-4 flex flex-col justify-between">
+              <div>
+                <h2 className="text-2xl font-semibold mb-2">{product.name}</h2>
+                <p className="text-gray-700 mb-2">{product.description}</p>
+                <p className="text-gray-900 font-bold mb-2">
+                  Price: ${product.price}
+                </p>
+                <p className="text-gray-700">Quantity: {product.quantity}</p>
+              </div>
+              <div className="flex justify-end items-end mt-auto">
+                <button onClick={() => deleteProduct(product.id)} className="bg-red-500 text-white px-3 py-1 rounded">
+                  Delete
+                </button>
+              </div>
             </div>
-
           </li>
         ))}
       </ul>
